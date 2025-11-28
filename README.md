@@ -186,16 +186,11 @@ cp seu_video.mp4 videos_novos/
 - Notificação é enviada via Telegram
 - Arquivo é movido para `videos_postados/`
 
-### 3. Monitoramento
-- **n8n Executions:** Verifique histórico de execuções
-- **Logs:** `docker-compose logs -f n8n`
-- **Notificações:** Canal do Telegram
-
-### 4. Monitoramento Remoto
+### 3. Monitoramento Local ou Remoto
 - **n8n:** Acesse via URL Ngrok de qualquer lugar
 - **Ngrok:** Interface: http://localhost:4040 (local)
 - **Telegram:** Receba notificações em tempo real
-- **Logs:** Acesse via interface n8n ou Docker
+- **Logs:** `docker-compose logs -f n8n`
 
 ---
 

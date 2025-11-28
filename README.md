@@ -197,8 +197,6 @@ cp seu_video.mp4 videos_novos/
 - **Telegram:** Receba notificações em tempo real
 - **Logs:** Acesse via interface n8n ou Docker
 
-  ---
-
 ---
 
 ### ⚠️ Boas Práticas

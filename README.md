@@ -213,7 +213,7 @@ cp seu_video.mp4 videos_novos/
 - Limite padrão: 10 unidades/dia
 
 ### 📄 Licença
-Este projeto está sob licença MIT. Veja o arquivo [LICENSE.md](LICENSE) para detalhes.
+Este projeto está sob licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para detalhes.
 
 ### ❓ Suporte
 - **Documentação n8n:** https://docs.n8n.io

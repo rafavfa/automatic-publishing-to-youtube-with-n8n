@@ -5,34 +5,46 @@
 ![Ollama](https://img.shields.io/badge/Ollama-2b7a78?style=flat-square&logo=ai&logoColor=white)
 ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white)
 ![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=flat-square&logo=telegram&logoColor=white)
+![Ngrok](https://img.shields.io/badge/Ngrok-1F1E37?style=flat-square&logo=ngrok&logoColor=white)
 
-**Descrição:** Sistema completo de automação para publicação de vídeos no YouTube usando n8n, Ollama (IA local) e Docker. O fluxo é acionado por agendamento, processa vídeos automaticamente e notifica resultados via Telegram.
+---
 
-## 🚀 Funcionalidades Principais
+**Descrição:** Sistema completo de automação para publicação de vídeos no YouTube usando n8n, Ollama (IA local) e Docker. O fluxo é acionado por agendamento, o AgentAI processa vídeos automaticamente gera título, descriçõe e hashtags notifica resultados via Telegram. Inclui Ngrok para acesso remoto seguro.
+
+---
+
+### 🚀 Funcionalidades Principais
 
 - **🕐 Agendamento Inteligente**: Acionamento automático via CRON
 - **🎯 Seleção Aleatória**: Escolhe vídeos automaticamente do diretório
-- **🤖 IA Local (Ollama)**: Gera títulos, descrições e tags otimizadas para SEO
+- **🤖 IA Local (Ollama)**: Gera títulos, descrições e hashtags
 - **📤 Upload Automático**: Posta vídeos via YouTube Data API
 - **📱 Notificações**: Envia status e links via Telegram
 - **🗂️ Organização**: Move arquivos processados automaticamente
+- **🌐 Tunnel**: Ngrok fornece acesso remoto seguro
 
-## 🏗️ Arquitetura do Sistema
+---
+
+### 🏗️ Arquitetura do Sistema
 
 ```
 Agendamento CRON → Seleção Vídeo → Validação → IA Ollama → Formatação → Binário → Upload YouTube → Notificação Telegram → Mover Vídeo
+     ↑
+Ngrok Tunnel (Acesso Remoto)
 ```
+---
 
-## 📋 Pré-requisitos
-
+### 📋 Pré-requisitos
 - **Docker** (>= 20.10) e **Docker Compose**
 - **Credenciais:**
   - YouTube Data API (Client ID, Secret, API Key, Refresh Token)
   - Telegram Bot Token (obtido via @BotFather)
-  - Acesso ao Ollama (local ou remoto)
+  - Ngrok Auth Token (obtido em https://dashboard.ngrok.com/get-started/your-authtoken)
+  - Acesso ao Ollama 3.2 (local)
+    
+---
 
-## 📁 Estrutura do Projeto
-
+### 📁 Estrutura do Projeto
 ```
 docker-n8n/
 ├── docker-compose.yml          # Orquestração de serviços
@@ -47,11 +59,11 @@ docker-n8n/
 └── docker+n8n.json           # Backup do workflow n8n
 ```
 
-## ⚙️ Configuração
+---
 
+### ⚙️ Configuração
 ### 1. Arquivo .env
 Crie um arquivo `.env` na raiz:
-
 ```env
 # YouTube Data API
 YOUTUBE_CLIENT_ID=your_youtube_client_id_here
@@ -121,8 +133,9 @@ networks:
     driver: bridge
 ```
 
-## 🛠️ Instalação
+---
 
+### 🛠️ Instalação
 ### 1. Clone e Configuração
 ```bash
 git clone https://github.com/rafavfa/autopost-videos-on-youtube-with-n8n.git
@@ -146,7 +159,7 @@ docker-compose up -d
 - **Usuário:** `n8nuser` (do .env)
 - **Senha:** Sua senha configurada
 
-## 📥 Importação do Workflow
+### 4. Importação do Workflow
 
 1. Acesse o n8n em `http://localhost:5678`
 2. Vá para **Workflows** → **Import**
@@ -156,8 +169,9 @@ docker-compose up -d
    - **Telegram Bot** (Token do Bot)
    - **HTTP Request** para Ollama (`http://ollama:11434/api/generate`)
 
-## 🎯 Como Usar
+---
 
+### 🎯 Como Usar
 ### 1. Adicione Vídeos
 ```bash
 # Coloque vídeos no diretório de entrada
@@ -177,75 +191,36 @@ cp seu_video.mp4 videos_novos/
 - **Logs:** `docker-compose logs -f n8n`
 - **Notificações:** Canal do Telegram
 
-## 🔧 Troubleshooting
+### 4. Monitoramento Remoto
+- **n8n:** Acesse via URL Ngrok de qualquer lugar
+- **Ngrok:** Interface: http://localhost:4040 (local)
+- **Telegram:** Receba notificações em tempo real
+- **Logs:** Acesse via interface n8n ou Docker
 
-| Problema | Solução |
-|----------|---------|
-| **n8n não inicia** | Verifique logs: `docker-compose logs n8n` |
-| **Erro YouTube 401** | Valide `YOUTUBE_REFRESH_TOKEN` |
-| **Ollama não responde** | Verifique: `docker-compose logs ollama` |
-| **Telegram sem notificação** | Confirme `TELEGRAM_BOT_TOKEN` e `CHAT_ID` |
-| **Vídeo não encontrado** | Verifique permissões em `videos_novos/` |
+  ---
 
-### Comandos Úteis
-```bash
-# Ver logs
-docker-compose logs -f
-docker-compose logs -f n8n
-docker-compose logs -f ollama
+---
 
-# Reiniciar serviços
-docker-compose restart n8n
-
-# Parar e limpar
-docker-compose down
-```
-
-## ⚠️ Boas Práticas
-
+### ⚠️ Boas Práticas
 - **🔒 Segurança:** Nunca versionar `.env` com credenciais
 - **📊 Backup:** Exporte workflows regularmente do n8n
 - **📈 Monitoramento:** Acompanhe quotas da YouTube API
 - **🔄 Atualização:** Mantenha imagens Docker atualizadas
 - **🔍 Logs:** Monitore execuções via interface n8n
 
-## 🐛 Solução de Problemas Comuns
-
-### Ollama Model Não Carregado
-```bash
-# Acesse o container Ollama
-docker exec -it ollama_ai ollama pull llama2
-```
-
-### Permissões de Arquivo
-```bash
-# Garanta permissões de leitura/escrita
-chmod 755 videos_novos videos_postados
-```
-
 ### YouTube API Quotas
 - Monitorar uso em [Google Cloud Console](https://console.cloud.google.com)
 - Limite padrão: 10 unidades/dia
 
-## 🤝 Contribuição
+### 📄 Licença
+Este projeto está sob licença MIT. Veja o arquivo [LICENSE.md](LICENSE) para detalhes.
 
-1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-3. Commit: `git commit -m 'feat: nova funcionalidade'`
-4. Push: `git push origin feature/nova-funcionalidade`
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está sob licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-## ❓ Suporte
-
+### ❓ Suporte
 - **Documentação n8n:** https://docs.n8n.io
 - **YouTube Data API:** https://developers.google.com/youtube/v3
+- **Ngrok:** https://ngrok.com/docs/what-is-ngrok
 - **Ollama:** https://ollama.ai
 - **Issues:** [GitHub Issues](https://github.com/rafavfa/autopost-videos-on-youtube-with-n8n/issues)
 
 ---
-
 ### ⭐ Se este projeto foi útil, considere dar uma estrela no repositório!

@@ -20,7 +20,7 @@
 ## 🏗️ Arquitetura do Sistema
 
 ```
-Agendamento CRON → Seleção Vídeo → Validação → IA Ollama → Formatação → Upload YouTube → Notificação Telegram
+Agendamento CRON → Seleção Vídeo → Validação → IA Ollama → Formatação → Binário → Upload YouTube → Notificação Telegram → Mover Vídeo
 ```
 
 ## 📋 Pré-requisitos
@@ -232,7 +232,7 @@ chmod 755 videos_novos videos_postados
 
 ### YouTube API Quotas
 - Monitorar uso em [Google Cloud Console](https://console.cloud.google.com)
-- Limite padrão: 10,000 unidades/dia
+- Limite padrão: 10 unidades/dia
 
 ## 🤝 Contribuição
 
@@ -255,4 +255,4 @@ Este projeto está sob licença MIT. Veja o arquivo [LICENSE](LICENSE) para deta
 
 ---
 
-**⭐ Se este projeto foi útil, considere dar uma estrela no repositório!**
+### ⭐ Se este projeto foi útil, considere dar uma estrela no repositório!

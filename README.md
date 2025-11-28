@@ -84,47 +84,40 @@ TZ=America/Sao_Paulo
 ```yaml
 # docker-compose.yml
 version: '3.8'
-
 services:
   n8n:
     image: n8nio/n8n:latest
-    container_name: n8n_automation
+    container_name: n8n_automator
+    restart: always
     ports:
       - "5678:5678"
     environment:
-      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE}
-      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
-      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
-      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-      - N8N_HOST=${N8N_HOST}
-      - N8N_PORT=${N8N_PORT}
-      - TZ=${TZ}
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+    extra_hosts: 
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./n8n_data:/home/node/.n8n
-      - ./videos_novos:/videos_novos
-      - ./videos_postados:/videos_postados
-    networks:
-      - n8n_network
+      - ./videos_novos:/files/videos_novos
+      - ./videos_postados:/files/videos_postados
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_tunnel
     restart: unless-stopped
-
-  ollama:
-    image: ollama/ollama:latest
-    container_name: ollama_ai
+    networks:
+      - default
     ports:
-      - "11434:11434"
+      - "4040:4040"
     environment:
-      - OLLAMA_HOST=${OLLAMA_HOST}
-    volumes:
-      - ollama_data:/root/.ollama
-    networks:
-      - n8n_network
-    restart: unless-stopped
-
-volumes:
-  ollama_data:
-
+      NGROK_AUTHTOKEN: "360Q3iaxIoF8xrVbhYizqKzfrxx_2cxeWKUriV6LBTrr6phQR" 
+      NGROK_REGION: "sa" 
+    command: 
+      "http n8n:5678" 
 networks:
-  n8n_network:
+  default:
     driver: bridge
 ```
 

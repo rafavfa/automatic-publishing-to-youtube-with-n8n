@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n_automator
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+    extra_hosts: 
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+      - ./videos_novos:/files/videos_novos
+      - ./videos_postados:/files/videos_postados
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_tunnel
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - "4040:4040"
+    environment:
+      NGROK_AUTHTOKEN: "360Q3iaxIoF8xrVbhYizqKzfrxx_2cxeWKUriV6LBTrr6phQR" 
+      NGROK_REGION: "sa" 
+    command: 
+      "http n8n:5678" 
+networks:
+  default:
+    driver: bridge

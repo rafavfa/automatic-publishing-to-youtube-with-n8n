@@ -181,7 +181,7 @@ networks:
 
 ---
 
-### 2. O Sistema Processa Automaticamente
+### O Sistema Processa Automaticamente
 - Agendamento CRON aciona o workflow
 - Vídeo aleatório é selecionado
 - IA gera metadados otimizados
@@ -189,9 +189,9 @@ networks:
 - Notificação é enviada via Telegram
 - Arquivo é movido para `videos_postados/`
 
-### 3. Monitoramento Local ou Remoto
+### Monitoramento Remoto
 - **n8n:** Acesse via URL Ngrok de qualquer lugar
-- **Ngrok:** Interface: http://localhost:4040 (local)
+- **Ngrok:** Interface: `http://localhost:4040`
 - **Telegram:** Receba notificações em tempo real
 - **Logs:** `docker-compose logs -f n8n`
 

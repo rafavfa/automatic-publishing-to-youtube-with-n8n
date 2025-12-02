@@ -125,7 +125,7 @@ networks:
    - **Telegram Bot** (Token do Bot) [Telegram BotFather](https://telegram.me/BotFather) 
    - **HTTP Request** para Ollama (`http://host.docker.internal:11434`)
   
-<img src="https://i.imgur.com/0BQgrVk.png" alt="VSCode Settings" width="650">
+<img src="https://i.imgur.com/AzLXvHH.png" alt="VSCode Settings" width="520">
 
 *(Imagem: Workflow docker+n8n.json)*
 

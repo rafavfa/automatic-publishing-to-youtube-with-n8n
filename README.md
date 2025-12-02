@@ -191,7 +191,7 @@ networks:
 
 ### Monitoramento Remoto
 - **n8n:** Acesse via URL Ngrok de qualquer lugar
-- **Ngrok:** Interface: `http://localhost:4040`
+- **Ngrok:** `http://localhost:4040`
 - **Telegram:** Receba notificações em tempo real
 - **Logs:** `docker-compose logs -f n8n`
 

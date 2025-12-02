@@ -1,5 +1,5 @@
 {
-  "name": "docker+n8n",
+  "name": "docker-n8n",
   "nodes": [
     {
       "parameters": {

@@ -52,14 +52,14 @@ Ngrok Tunnel (Acesso Remoto)
  └──home/
     └──user/
        └──docker-n8n/
-          └── n8n_data/                    # Dados persistentes do n8n
+          └── n8n_data/                            # Dados persistentes do n8n
               │   ├── config/
               │   ├── binaryData/
               │   └── nodes/
-              ├── videos_novos/            # Vídeos aguardando processamento
-              ├── videos_postados/         # Vídeos já publicados
-              ├── docker-compose.yml       # Orquestração de serviços
-              └── docker+n8n.json          # Backup do workflow n8n                             
+              ├── videos_novos/                    # Vídeos aguardando processamento
+              ├── videos_postados/                 # Vídeos já publicados
+              ├── docker-compose.yml               # Orquestração de serviços
+              └── n8n-autopost-on-youtube.json     # Backup do workflow n8n                             
 ```              
 
 ---
@@ -118,7 +118,7 @@ networks:
 
 **4. Acesse o n8n em `http://localhost:5678`**
 
-**5. Vá para Workflows → Importe o arquivo `docker+n8n.json`**
+**5. Vá para Workflows → Importe o arquivo `n8n-autopost-on-youtube.json`**
 
 **6. Configure as credenciais nos nós:**
    - **YouTube API** (OAuth2) [Google Cloud](https://cloud.google.com/)

@@ -1,15 +1,15 @@
 # Automação de Postagem de Vídeos no YouTube com n8n
 
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
-![n8n](https://img.shields.io/badge/n8n-FF6D00?style=flat-square&logo=n8n&logoColor=white)
-![Ollama](https://img.shields.io/badge/Ollama-2b7a78?style=flat-square&logo=ai&logoColor=white)
+![n8n](https://img.shields.io/badge/n8n-EA4B71?style=flat-square&logo=n8n&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-6BA0B4?style=flat-square&logo=ai&logoColor=white)
 ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white)
-![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=flat-square&logo=telegram&logoColor=white)
-![Ngrok](https://img.shields.io/badge/Ngrok-1F1E37?style=flat-square&logo=ngrok&logoColor=white)
+![Telegram](https://img.shields.io/badge/Telegram-3390EC?style=flat-square&logo=telegram&logoColor=white)
+![Ngrok](https://img.shields.io/badge/Ngrok-140648?style=flat-square&logo=ngrok&logoColor=white)
 
 ---
 
-**Descrição:** Sistema completo de automação para publicação de vídeos no YouTube usando n8n, Ollama (IA local) e Docker. O fluxo é acionado por agendamento, o AgentAI processa vídeos automaticamente gera título, descriçõe e hashtags notifica resultados via Telegram. Inclui Ngrok para acesso remoto seguro.
+***Descrição: Sistema completo de automação para publicação de vídeos no YouTube usando n8n, Ollama (IA local) e Docker. O fluxo é acionado por agendamento, o AgentAI processa vídeos automaticamente gera título, descriçõe e hashtags notifica resultados via Telegram. Inclui Ngrok para acesso remoto seguro.***
 
 ---
 
@@ -37,69 +37,39 @@ Ngrok Tunnel (Acesso Remoto)
 ### 📋 Pré-requisitos
 - **Docker** (>= 20.10) e **Docker Compose**
 - **Credenciais:**
-  - YouTube Data API (Client ID, Secret, API Key, Refresh Token)
-  - Telegram Bot Token (obtido via @BotFather)
-  - Ngrok Auth Token (obtido em https://dashboard.ngrok.com/get-started/your-authtoken)
+  - YouTube Data API (Client ID, Secret, API Key, Refresh Token) [Google Cloud](https://cloud.google.com/)
+  - Telegram Bot Token (obtido via @BotFather) [Telegram BotFather](https://telegram.me/BotFather)
+  - Ngrok Auth Token [Ngrok](https://dashboard.ngrok.com/get-started/your-authtoken)
   - Acesso ao Ollama 3.2 (local)
     
 ---
 
 ### 📁 Estrutura do Projeto
 ```
-docker-n8n/
-├── docker-compose.yml          # Orquestração de serviços
-├── .env                       # Variáveis de ambiente (NÃO versionar)
-├── README.md                  # Esta documentação
-├── n8n_data/                  # Dados persistentes do n8n
-│   ├── config/
-│   ├── binaryData/
-│   └── nodes/
-├── videos_novos/              # Vídeos aguardando processamento
-├── videos_postados/           # Vídeos já publicados
-└── docker+n8n.json           # Backup do workflow n8n
-```
+\\wsl.localhost\Ubuntu\home\user\docker-n8n
+
+\\wsl.localhost\Ubuntu\
+ └──home/
+    └──user/
+       └──docker-n8n/
+          └── n8n_data/                    # Dados persistentes do n8n
+              │   ├── config/
+              │   ├── binaryData/
+              │   └── nodes/
+              ├── videos_novos/            # Vídeos aguardando processamento
+              ├── videos_postados/         # Vídeos já publicados
+              ├── docker-compose.yml       # Orquestração de serviços
+              └── docker+n8n.json          # Backup do workflow n8n                             
+```              
 
 ---
 
-### ⚙️ Configuração
-### 1. Arquivo .env
-Crie um arquivo `.env` na raiz:
-```env
-# YouTube Data API
-YOUTUBE_CLIENT_ID=your_youtube_client_id_here
-YOUTUBE_CLIENT_SECRET=your_youtube_client_secret_here
-YOUTUBE_API_KEY=your_youtube_api_key_here
-YOUTUBE_REFRESH_TOKEN=your_youtube_refresh_token_here
-
-# Telegram (Notificações)
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
-TELEGRAM_CHAT_ID=your_telegram_chat_id_here
-
-# Ollama (IA Local)
-OLLAMA_HOST=http://ollama
-OLLAMA_PORT=11434
-OLLAMA_MODEL=llama2
-
-# n8n (Autenticação & Config)
-N8N_BASIC_AUTH_ACTIVE=true
-N8N_BASIC_AUTH_USER=n8nuser
-N8N_BASIC_AUTH_PASSWORD=your_secure_password_here
-N8N_ENCRYPTION_KEY=your-32-character-encryption-key-here
-N8N_HOST=0.0.0.0
-N8N_PORT=5678
-
-# Timezone
-TZ=America/Sao_Paulo
-```
-
-### 2. Docker Compose
+### ⚙️ Docker Compose
 ```yaml
-# docker-compose.yml
-version: '3.8'
 services:
   n8n:
     image: n8nio/n8n:latest
-    container_name: n8n_automator
+    container_name: n8n_docker
     restart: always
     ports:
       - "5678:5678"
@@ -108,7 +78,8 @@ services:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
       - NODE_ENV=production
-      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - GENERIC_TIMEZONE=America/Sao_Paulo 
+      - N8N_HOST_MODE=default
     extra_hosts: 
       - "host.docker.internal:host-gateway"
     volumes:
@@ -117,17 +88,19 @@ services:
       - ./videos_postados:/files/videos_postados
   ngrok:
     image: ngrok/ngrok:latest
-    container_name: ngrok_tunnel
+    container_name: ngrok_docker
     restart: unless-stopped
     networks:
       - default
     ports:
       - "4040:4040"
     environment:
-      NGROK_AUTHTOKEN: "360Q3iaxIoF8xrVbhYizqKzfrxx_2cxeWKUriV6LBTrr6phQR" 
+      NGROK_AUTHTOKEN: "Sua Authtoken" 
       NGROK_REGION: "sa" 
     command: 
       "http n8n:5678" 
+    depends_on:
+      - n8n
 networks:
   default:
     driver: bridge
@@ -135,48 +108,78 @@ networks:
 
 ---
 
-### 🛠️ Instalação
-### 1. Clone e Configuração
-```bash
-git clone https://github.com/rafavfa/autopost-videos-on-youtube-with-n8n.git
-cd autopost-videos-on-youtube-with-n8n
+## 🛠️ Configuração
 
-# Crie o arquivo .env e configure as credenciais
-cp .env.example .env  # Se disponível, ou crie manualmente
-nano .env
+**1. Abra o `docker-compose.yaml` no seu VSCode**
 
-# Crie diretórios necessários
-mkdir -p videos_novos videos_postados n8n_data
-```
+**2. Configure no `docker-compose.yaml` sua NGROK_AUTHTOKEN** [Ngrok](https://dashboard.ngrok.com/get-started/your-authtoken)
 
-### 2. Inicie os Serviços
-```bash
-docker-compose up -d
-```
+**3. No terminal Ubuntu(WSL) execute o comando: `docker-compose up -d`**
 
-### 3. Acesse o n8n
-- **URL:** http://localhost:5678
-- **Usuário:** `n8nuser` (do .env)
-- **Senha:** Sua senha configurada
+**4. Acesse o n8n em `http://localhost:5678`**
 
-### 4. Importação do Workflow
+**5. Vá para Workflows → Importe o arquivo `docker+n8n.json`**
 
-1. Acesse o n8n em `http://localhost:5678`
-2. Vá para **Workflows** → **Import**
-3. Cole o JSON do workflow ou importe o arquivo `docker+n8n.json`
-4. Configure as credenciais nos nós:
-   - **YouTube API** (OAuth2)
-   - **Telegram Bot** (Token do Bot)
-   - **HTTP Request** para Ollama (`http://ollama:11434/api/generate`)
+**6. Configure as credenciais nos nós:**
+   - **YouTube API** (OAuth2) [Google Cloud](https://cloud.google.com/)
+   - **Telegram Bot** (Token do Bot) [Telegram BotFather](https://telegram.me/BotFather) 
+   - **HTTP Request** para Ollama (`http://host.docker.internal:11434`)
+  
+<img src="https://i.imgur.com/0BQgrVk.png" alt="VSCode Settings" width="650">
+
+*(Imagem: Workflow docker+n8n.json)*
+
 
 ---
 
 ### 🎯 Como Usar
-### 1. Adicione Vídeos
-```bash
-# Coloque vídeos no diretório de entrada
-cp seu_video.mp4 videos_novos/
-```
+
+*Coloque vídeos no diretório de entrada*
+`\\wsl.localhost\Ubuntu\home\rafavfa\docker-n8n\videos_novos`
+
+### 🛡️ Configuração, Permissões e Inicialização!
+
+*Siga esta sequência de comandos no seu terminal WSL, dentro do diretório `~/docker-n8n`, para garantir que o Docker e a aplicação n8n tenham as permissões corretas para acessar os volumes.*
+
+1.  **Corrigir Acesso ao Docker (Grupo):** *Adiciona o usuário ao grupo `docker` para habilitar o acesso ao Docker sem `sudo`.*
+    ```bash
+    sudo usermod -aG docker [usuario_padrao]
+    ```
+2.  **Navegar para o Projeto:** *Navega para o diretório raiz do projeto.*
+    ```bash
+    cd ~/docker-n8n
+    ```
+3.  **Ativar Permissões de Grupo:** *Ativa as permissões do grupo `docker` no shell atual. (Você permanecerá na pasta `~/docker-n8n`).*
+    ```bash
+    newgrp docker
+    ```
+4.  **Parar Containers Antigos:** *Para e remove quaisquer containers antigos para iniciar o processo de limpeza de permissões.*
+    ```bash
+    docker-compose down
+    ```
+5.  **Definir Proprietário dos Volumes (`chown`):** *Define o seu usuário como proprietário recursivo de todos os volumes para evitar problemas de "Acesso Negado".*
+    ```bash
+    sudo chown -R [usuario_padrao]:[usuario_padrao] n8n_data videos_novos videos_postados
+    ```
+6.  **Definir Permissão do Volume n8n\_data:** *Concede permissão de leitura/escrita/execução (`775`) para o volume de configuração.*
+    ```bash
+    sudo chmod -R 775 n8n_data
+    ```
+7.  **Definir Permissão do Volume videos\_novos:** *Concede permissão `775` para a pasta de vídeos de entrada, permitindo acesso tanto ao seu usuário quanto ao Docker.*
+    ```bash
+    sudo chmod -R 775 videos_novos
+    ```
+8.  **Definir Permissão do Volume videos\_postados:** *Concede permissão `775` para a pasta de vídeos postados, permitindo que o n8n mova os arquivos.*
+    ```bash
+    sudo chmod -R 775 videos_postados
+    ```
+9.  **Iniciar o Projeto:** *Inicia os containers em segundo plano.*
+    ```bash
+    docker-compose up -d
+    ```
+***⚠️ Nota: Substitua `[usuario_padrao]` pelo seu usuário real.***
+
+---
 
 ### 2. O Sistema Processa Automaticamente
 - Agendamento CRON aciona o workflow
@@ -195,7 +198,7 @@ cp seu_video.mp4 videos_novos/
 ---
 
 ### ⚠️ Boas Práticas
-- **🔒 Segurança:** Nunca versionar `.env` com credenciais
+- **🔒 Segurança:** Nunca versionar com credenciais
 - **📊 Backup:** Exporte workflows regularmente do n8n
 - **📈 Monitoramento:** Acompanhe quotas da YouTube API
 - **🔄 Atualização:** Mantenha imagens Docker atualizadas

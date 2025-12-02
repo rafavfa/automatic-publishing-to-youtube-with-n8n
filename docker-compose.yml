@@ -27,7 +27,7 @@ services:
     ports:
       - "4040:4040"
     environment:
-      NGROK_AUTHTOKEN: "Sua Authtoken" 
+      NGROK_AUTHTOKEN: "SuaAuthtoken" 
       NGROK_REGION: "sa" 
     command: 
       "http n8n:5678" 

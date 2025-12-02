@@ -1,5 +1,5 @@
 {
-  "name": "docker-n8n",
+  "name": "n8n-autopost-on-youtube.json",
   "nodes": [
     {
       "parameters": {
